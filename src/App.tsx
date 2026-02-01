@@ -107,11 +107,6 @@ const App = () => {
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      <div className="text-center mt-12 text-slate-400 text-xs">
-        data from openweathermap
-      </div>
     </div>
   )
 }
