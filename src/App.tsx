@@ -38,8 +38,8 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-300 via-blue-400 to-blue-600 flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-8 drop-shadow-xl animate-bounce">
+    <div className="min-h-screen bg-linear-to-b from-blue-300 via-blue-400 to-blue-600 flex flex-col items-center justify-center p-6">
+      <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-yellow-400 via-red-500 to-pink-500 mb-8 drop-shadow-xl animate-bounce">
         Weather App
       </h1>
 

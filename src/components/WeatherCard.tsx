@@ -1,11 +1,11 @@
-// src/components/WeatherCard.tsx
+
 import type { WeatherData } from "../types/weather"
 
-interface Props {
+interface WeatherProps {
   weather: WeatherData
 }
 
-const WeatherCard = ({ weather }: Props) => {
+const WeatherCard = ({ weather }: WeatherProps) => {
   return (
     <div className="bg-white bg-opacity-80 backdrop-blur-md rounded-xl shadow-lg p-6 w-80 text-center">
       <h2 className="text-2xl font-bold mb-2">
