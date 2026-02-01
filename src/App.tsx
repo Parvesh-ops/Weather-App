@@ -7,16 +7,16 @@ const App = () => {
   const [city, setCity] = useState<string>("")
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
+  const [error, setError] = useState<string>("")
 
   const getWeather = async () => {
-    if (!city) return
+    if (!city.trim()) return
 
     const API_KEY = import.meta.env.VITE_WEATHER_API_KEY as string
 
     try {
       setLoading(true)
-      setError(false)
+      setError("")
 
       const response = await axios.get(
         "https://api.openweathermap.org/data/2.5/weather",
@@ -28,55 +28,90 @@ const App = () => {
           },
         }
       )
+      console.log(response.data)
+      
       setWeather(response.data)
 
     } catch (error) {
       console.error("Failed to fetch data", error)
+      setError("City not found. Please try again.")
+      setWeather(null)
     } finally {
       setLoading(false)
     }
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      getWeather()
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-300 via-blue-400 to-blue-600 flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-yellow-400 via-red-500 to-pink-500 mb-8 drop-shadow-xl animate-bounce">
-        Weather App
-      </h1>
+    <div className="min-h-screen bg-slate-100 py-8 px-4">
+      <div className="max-w-lg mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-slate-800 mb-2">
+            weather check
+          </h1>
+          <p className="text-slate-600">
+            type in a city, see what's up
+          </p>
+        </div>
 
-      <p className="text-white text-lg md:text-xl mb-6 text-center drop-shadow-md">
-        Get real-time weather updates for any city in the world 🌤️
-      </p>
+        {/* Search Box */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 mb-6">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="city name"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500 text-slate-900"
+            />
 
-      <div className="flex space-x-2 mb-6">
-        <input
-          type="text"
-          placeholder="Enter city"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="w-64 px-4 py-2 rounded-xl border-2 border-blue-500 bg-white text-black placeholder-gray-400 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+            <button
+              onClick={getWeather}
+              disabled={loading || !city.trim()}
+              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+            >
+              {loading ? "..." : "Search"}
+            </button>
+          </div>
 
-        <button
-          onClick={getWeather}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          Get Weather
-        </button>
+          {/* Error Message */}
+          {error && (
+            <div className="mt-3 text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+        </div>
+
+        {/* Weather Card */}
+        {weather && <WeatherCard weather={weather} />}
+
+        {/* Loading state */}
+        {loading && !weather && (
+          <div className="text-center py-12 text-slate-500">
+            loading weather...
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!weather && !loading && !error && (
+          <div className="text-center py-16 text-slate-400">
+            <div className="text-5xl mb-3">☁️</div>
+            <p>search for a city to start</p>
+          </div>
+        )}
       </div>
 
-      {loading && (
-        <p className="text-white font-semibold animate-pulse">
-          Loading...
-        </p>
-      )}
-
-      {error && (
-        <p className="text-red-600 font-semibold">
-          Error: Failed to fetch data
-        </p>
-      )}
-
-      {weather && <WeatherCard weather={weather} />}
+      {/* Footer */}
+      <div className="text-center mt-12 text-slate-400 text-xs">
+        data from openweathermap
+      </div>
     </div>
   )
 }
